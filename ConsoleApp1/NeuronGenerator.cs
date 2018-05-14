@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace MyNotSoLittlePryczkoptron
 {
-    class NeuronGenerator
+    public class NeuronGenerator
     {
         public List<Neuron> GetNeurons(int NumberOfNeurons, double XRange, double YRange)
         {

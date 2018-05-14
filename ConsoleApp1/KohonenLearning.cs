@@ -25,7 +25,7 @@ namespace MyNotSoLittlePryczkoptron
     private Neuron Winner;
     private List<Neuron> NeuronsToChange;
 
-    private Func<Neuron, Neuron, double> ProximityFunctionType;
+	public Func<Neuron, Neuron, double> ProximityFunctionType;
 
     public KohonenLearning(List<Neuron> ListOfNeurons, List<Point> ListOfPoints, Configuration Configuration)
     {

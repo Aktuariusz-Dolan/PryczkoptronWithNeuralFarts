@@ -20,7 +20,8 @@ namespace MyNotSoLittlePryczkoptron
 
 		public void NeuronListSort(List<Neuron> Neurons)
 		{
-
+			Neuron Comparer = new Neuron(new double[] { 1.0, 2.0 });
+			Neurons.Sort();
 		}
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MyNotSoLittlePryczkoptron
 {
-    public class Neuron
+    public class Neuron : IComparable<Neuron>
     {
         private double Potential = 1;
         private List<Point> AreaOfInfluence;
@@ -121,14 +121,19 @@ namespace MyNotSoLittlePryczkoptron
         {
             return Potential;
         }
+		public bool CompareNeurons(Neuron o1, Neuron o2)
+		{
+			double d1 = o1.CalculateDistanceFrom(o1.GetTargetPoint());
+			double d2 = o2.CalculateDistanceFrom(o2.GetTargetPoint());
+			return d1 <= d2;
+		}
 
-        public bool CompareNeurons(Neuron o1, Neuron o2)
-        {
-            double d1 = o1.CalculateDistanceFrom(o1.GetTargetPoint());
-            double d2 = o2.CalculateDistanceFrom(o2.GetTargetPoint());
-            return d1 <= d2;
-        }
-
-    }
+		public int CompareTo(Neuron Neur2)
+		{
+			double d1 = this.CalculateDistanceFrom(this.GetTargetPoint());
+			double d2 = Neur2.CalculateDistanceFrom(Neur2.GetTargetPoint());
+			return d1.CompareTo(Neur2);
+		}
+	}
 }
 

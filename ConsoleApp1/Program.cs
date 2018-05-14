@@ -9,6 +9,7 @@ namespace MyNotSoLittlePryczkoptron
     {
         static void Main(string[] args)
         {
+			bool KohonenSwitch = false;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             NeuronGenerator NeuralGenerator = new NeuronGenerator();
             Configuration Configuration = new Configuration();
@@ -19,15 +20,27 @@ namespace MyNotSoLittlePryczkoptron
 			List<Neuron> Neurons = NeuralGenerator.GetNeurons(Configuration.GetAmountOfNeurons(), InitialXRange, InitialYRange);
             List<Point> TrainingPointsList = Parser.Parse();
             KohonenLearning NeuralNetworkKohonenStyle = new KohonenLearning(Neurons, TrainingPointsList, Configuration);
-               for( int i = 0; i < 1000; i++)
+			NeuralGas NeuralNetworkGasStyle = new NeuralGas(Neurons, TrainingPointsList, Configuration, NeuralGenerator);
+			if (KohonenSwitch == true)
+			{
+				for (int i = 0; i < 1000; i++)
 				{
-					if (i%50 == 0) { Console.WriteLine("ZUPA"); }
+					if (i % 50 == 0) { Console.WriteLine("Progress o 10 %"); }
 					NeuralNetworkKohonenStyle.Train(i);
 				}
-            Parser.OutputFilePath = "G:\\Outcome.txt";
-            Parser.ParseOut(NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints());
-            Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
-            Console.ReadKey();
-        }
+				Parser.OutputFilePath = "G:\\Outcome.txt";
+				Parser.ParseOut(NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints());
+			}
+			else
+			{
+				for (int i = 0; i < 500; i++)
+				{
+					if (i % 50 == 0) { Console.WriteLine("Progress o 10 %"); }
+					NeuralNetworkGasStyle.Train(i);
+				}
+				Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
+				Console.ReadKey();
+			}
+		}
     }
 }

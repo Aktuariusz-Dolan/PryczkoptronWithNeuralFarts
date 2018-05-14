@@ -21,17 +21,34 @@ namespace MyNotSoLittlePryczkoptron
 	private double MaxSpeed;
 	private double MinSpeed;
 
+	private Neuron Winner;
+	private NeuronGenerator NeuronGen;
 	private int NumberOfEpochs;
 
-	public NeuralGas(List<Neuron> ListOfNeurons, List<Point> ListOfPoints, Configuration Configuration)
-    {
+	public Func<Neuron, Neuron, double> ProximityFunctionType;
+
+		public NeuralGas(List<Neuron> ListOfNeurons, List<Point> ListOfPoints, Configuration Configuration, NeuronGenerator Generator)
+		{
         this.Neurons = ListOfNeurons;
         this.Points = ListOfPoints;
         this.SetParams(Configuration);
         this.Errors = new List<Point>();
-    }
+		ProximityFunctionType = new ProximityFunction(Metric.Euclidean, Proximity.Rekt).CalculateProximity;
+		}
 
-	public void SetParams(Configuration SourceConfiguration)
+	private void SetTargetPoint(Point Target)
+	{
+		foreach(Neuron Neuron in Neurons)
+		{
+			Neuron.SetTargetPoint(Target);
+		}
+	}
+		private double SpeedFactor(int Iteration)
+		{
+			return MaxSpeed * Math.Pow(MinSpeed / MaxSpeed, (Double)Iteration / (Double)NumberOfEpochs);
+		}
+
+		public void SetParams(Configuration SourceConfiguration)
 		{
 			this.MaxRange = SourceConfiguration.GetMaxRange();
 			this.MinRange = SourceConfiguration.GetMinRange();
@@ -40,129 +57,124 @@ namespace MyNotSoLittlePryczkoptron
 			this.NumberOfEpochs = SourceConfiguration.GetAmountOfEpochs();
 		}
 
-		public void Learn(int iteration) { 
+		private void UpdateWeights(int Iteration, Point TargetPoint)
+		{
+			foreach (Neuron Current in Neurons)
+			{
+				double[] WeightsOfNeuronToChange = Current.GetWeightsArray();
+
+				WeightsOfNeuronToChange[0] = WeightsOfNeuronToChange[0] + SpeedFactor(Iteration) * ProximityFunctionType(Winner, Current) * (TargetPoint.XCoordinate - WeightsOfNeuronToChange[0]);
+				WeightsOfNeuronToChange[1] = WeightsOfNeuronToChange[1] + SpeedFactor(Iteration) * ProximityFunctionType(Winner, Current) * (TargetPoint.YCoordinate - WeightsOfNeuronToChange[1]);
+			}
+		}
+
+		public override void Train(int Iteration)
+		{
 			Shuffler.Shuffle<Point>(Points, Randomizer);
 
-		double error = 0.0;
+			double error = 0.0;
 
-		for (int i = 0; i < Points.Count(); i++)
-		{
-			//setting target
-			Point Target = Points[i];
-			this.SetTargetPoint(Target);
-			//sorting by distance
-			(neurons, distanceComparator);
-			error += neurons.get(0).getDistance(points.get(i));
-			//learning
-			this.changeWeights(iteration, Target);
-			neurons.get(0).AddPointInNeuronArea(Target);
+			for (int i = 0; i < Points.Count(); i++)
+			{
+				Point Target = Points[i];
+				this.SetTargetPoint(Target);
+				Shuffler.NeuronListSort(Neurons);
+				Winner = Neurons[0];
+				error += Neurons[0].CalculateDistanceFrom(Points[i]);
+				this.UpdateWeights(Iteration, Target);
+				Neurons[0].AddPointInNeuronArea(Target);
+			}
+
+			foreach (Neuron Neuron in Neurons)
+			{
+				Neuron.UpdatePositions(Neuron.GetWeight(0), Neuron.GetWeight(1));
+			}
+
+			Errors.Add(new Point(Iteration, error / Points.Count()));
+			if (Iteration == 0)
+			{
+				Pointparser Outlet = new Pointparser();
+				Output(Outlet, "G:\\OutputsFromGasNetwork", Iteration);
+			}
+			if (Iteration == 9)
+			{
+				Pointparser Outlet = new Pointparser();
+				Output(Outlet, "G:\\OutputsFromGasNetwork", Iteration);
+			}
+
+			if (Iteration == 49)
+			{
+				Pointparser Outlet = new Pointparser();
+				Output(Outlet, "G:\\OutputsFromGasNetwork", Iteration);
+			}
+
+			if (Iteration == 100)
+			{
+				Pointparser Outlet = new Pointparser();
+				Output(Outlet, "G:\\OutputsFromGasNetwork", Iteration);
+			}
+
+			if (Iteration == 499)
+			{
+				Pointparser Outlet = new Pointparser();
+				Output(Outlet, "G:\\OutputsFromGasNetwork", Iteration);
+			}
 		}
 
-		for (Neuron Neuron in Neurons)
+	
+
+
+public void DeleteWorstNeurons()
 		{
-			neuron.setPositions(neuron.getWeight(0), neuron.getWeight(1));
+			Neurons.RemoveRange(Neurons.Count() - 11, 10);
+			for (int i = 0; i < 10; i++)
+				{
+					Neurons.Add(NeuronGen.GetNeurons(1, 10.0, 10.0)[0]);
+				}
 		}
 
-		errors.add(new Point(iteration, error / points.size()));
-
+	public List<Neuron> GetNeurons()
+	{
+		return Neurons;
 	}
 
-	private void changeWeights(int interation, Point targetPoint)
+	public void SetNeurons(List<Neuron> ImportedNeurons)
 	{
-		for (int i = 0; i < neurons.size(); i++)
+		this.Neurons = ImportedNeurons;
+	}
+
+	public List<Point> GetPoints()
+	{
+		return Points;
+	}
+
+	public List<Point> GetErrorList()
+	{
+		return Errors;
+	}
+
+	public double GetLast()
+	{
+		return Errors[Errors.Count() - 1].YCoordinate;
+	}
+
+	public void SetPoints(List<Point> Points)
+	{
+		this.Points = Points;
+	}
+
+	public void Output(Pointparser Parser, String BasePathfile, int iteration)
 		{
-			double[] w = neurons.get(i).getWeights();
-			w[0] = w[0] + calcSpeedFactor(interation) * proximityFunc(i, interation) * (targetPoint.x - w[0]);
-			w[1] = w[1] + calcSpeedFactor(interation) * proximityFunc(i, interation) * (targetPoint.y - w[1]);
-		}
-	}
-
-	private void SetTargetPoint(Point targetPoint)
-	{
-		for (Neuron neuron : neurons)
-		{
-			neuron.setTargetPoint(targetPoint);
-		}
-	}
-
-	private double proximityFunc(int neuronIndex, int iteration)
-	{
-		double lambda = maxRange * Math.pow(minRange / maxRange, iteration / (double)NumberOfEpochs);
-		return Math.exp(-neuronIndex / lambda);
-	}
-
-	private double calcSpeedFactor(int iteration)
-	{
-		return maxSpeed * Math.pow(minSpeed / maxSpeed, iteration / (double)NumberOfEpochs);
-	}
-
-	public void deleteTheFarestNeurons()
-	{
-		neurons.subList(neurons.size() - 10, neurons.size()).clear();
-		for (int i = 0; i < 10; i++)
-		{
-			neurons.add(NeuronsGenerator.getNeuron(new Square(new Point(-1.2, -1.2), new Point(1.2, -1.2), new Point(1.2, 1.2), new Point(-1.2, 1.2))));
-		}
-	}
-
-	public List<Neuron> getNeurons()
-	{
-		return neurons;
-	}
-
-	public void setNeurons(List<Neuron> neurons)
-	{
-		this.neurons = neurons;
-	}
-
-	public List<Point> getPoints()
-	{
-		return points;
-	}
-
-	public List<Point> getError()
-	{
-		return errors;
-	}
-
-	public double getLast()
-	{
-		return errors.get(errors.size() - 1).getY();
-	}
-
-	public void setPoints(List<Point> points)
-	{
-		this.points = points;
-	}
-
-	public void save(String fileName)
-	{
 		//neurons as points
-		ArrayList<Point> neuronsAsPoints = new ArrayList<>();
-		for (Neuron neuron : neurons)
-		{
-			neuronsAsPoints.add(neuron.getAsPoint());
+		List<Point> NeuronsAsPoints = new List<Point>();
+		foreach (Neuron Neuron in Neurons)
+			{
+			NeuronsAsPoints.Add(Neuron.GetAsPoint());
+			}
+			Parser.OutputFilePath = BasePathfile + "\\Iteration" + iteration.ToString() + "\\NeuronsAfterIteration.txt";
+			Parser.ParseOut(NeuronsAsPoints);
 		}
-
-		Plot plot = new Plot();
-		XYDataset dataset1 = plot.createDataset(points, "points");
-		XYDataset dataset2 = plot.createDataset(neuronsAsPoints, "neurons");
-		XYLineAndShapeRenderer rendere = new XYLineAndShapeRenderer(false, true);
-		XYLineAndShapeRenderer rendere2 = new XYLineAndShapeRenderer(false, true);
-		rendere.setBaseShape(new Rectangle(4, 4));
-		rendere2.setBaseShape(new Rectangle(1, 1));
-		JFreeChart chart = plot.createGraph("Neural Gas", dataset2, rendere);
-		plot.addDataset(chart, dataset1, rendere2);
-		plot.saveGraphToJPG(chart, fileName);
+		
 	}
-
-	public void saveErrorGraph(String fileName)
-	{
-		Plot plot = new Plot();
-		XYDataset datasetError = plot.createDataset(errors, "Level of organization of map");
-		JFreeChart chart = plot.createGraph("Level of organization of map", datasetError, new XYLineAndShapeRenderer(true, false));
-		plot.saveGraphToJPG(chart, fileName);
-	}
-}
 
 }
