@@ -132,7 +132,7 @@ namespace MyNotSoLittlePryczkoptron
 		{
 			double d1 = this.CalculateDistanceFrom(this.GetTargetPoint());
 			double d2 = Neur2.CalculateDistanceFrom(Neur2.GetTargetPoint());
-			return d1.CompareTo(Neur2);
+			return d1.CompareTo(d2);
 		}
 	}
 }
