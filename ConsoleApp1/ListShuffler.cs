@@ -17,5 +17,10 @@ namespace MyNotSoLittlePryczkoptron
                 SourceList[ListSize] = value;
             }
         }
+
+		public void NeuronListSort(List<Neuron> Neurons)
+		{
+
+		}
     }
 }

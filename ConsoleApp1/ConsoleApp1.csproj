@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
-    <Compile Include="IAlgorithm.cs" />
+    <Compile Include="GasAlgorithm.cs" />
     <Compile Include="KohonenLearning.cs" />
     <Compile Include="Learn.cs" />
     <Compile Include="ListShuffler.cs" />
