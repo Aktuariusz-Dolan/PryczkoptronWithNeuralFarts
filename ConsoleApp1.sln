@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\
 		{DDF5D740-6EE1-44BA-9DB9-782BF23E28D6} = {DDF5D740-6EE1-44BA-9DB9-782BF23E28D6}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FortuneVoronoi", "..\FortuneVoronoi\FortuneVoronoi.csproj", "{DDF5D740-6EE1-44BA-9DB9-782BF23E28D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FortuneVoronoi", "FortuneVoronoi\FortuneVoronoi.csproj", "{DDF5D740-6EE1-44BA-9DB9-782BF23E28D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

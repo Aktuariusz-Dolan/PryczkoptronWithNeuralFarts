@@ -88,7 +88,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\FortuneVoronoi\FortuneVoronoi.csproj">
+    <ProjectReference Include="..\FortuneVoronoi\FortuneVoronoi.csproj">
       <Project>{ddf5d740-6ee1-44ba-9db9-782bf23e28d6}</Project>
       <Name>FortuneVoronoi</Name>
     </ProjectReference>
