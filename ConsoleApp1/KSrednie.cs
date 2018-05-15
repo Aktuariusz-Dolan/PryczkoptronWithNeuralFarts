@@ -37,19 +37,18 @@ namespace MyNotSoLittlePryczkoptron
 		public List<Point> Clusterize()
 		{
 			Neurons = NeurGen.GetNeurons(ClusterCount, Xrange, Yrange);
-			Parallel.ForEach(Points, Point => {
+			foreach(Point Point in Points) {
 				double ClosestDistance = double.MaxValue;
 				int BestSoFar = -1;
 				for (int i = 0; i < ClusterCount; i++)
 				{
-				
 					if(Neurons[i].CalculateDistanceFrom(Point) < ClosestDistance)
 					{
 						BestSoFar = i;
 					}
 				}
 				Clusters[BestSoFar].Add(Point);
-			});
+			};
 			Error.Add(0.0);
 			for (int Iteration = 0; Iteration < MaxIters; Iteration++) {
 				Error.Add(0.0);
@@ -64,12 +63,12 @@ namespace MyNotSoLittlePryczkoptron
 				};
 
 				//reassign clusters;
-				foreach(int i in Clusters.Keys)
+				for(int i = 0; i < ClusterCount; i++)
 				{
-					Clusters[i].Clear();
+					Clusters[i] = new List<Point>();
 				}
 
-				Parallel.ForEach(Points, Point => {
+				foreach(Point Point in Points) {
 					double ClosestDistance = double.MaxValue;
 					int BestSoFar = -1;
 					for (int i = 0; i < ClusterCount; i++)
@@ -81,8 +80,7 @@ namespace MyNotSoLittlePryczkoptron
 						}
 					}
 					Clusters[BestSoFar].Add(Point);
-					Console.WriteLine("DUPA W KLASTER");
-				});
+				};
 			}
 			List<Point> Centroids = new List<Point>();
 			foreach(Neuron Neuron in Neurons)
@@ -92,18 +90,20 @@ namespace MyNotSoLittlePryczkoptron
 			return Centroids;
 		}
 
-		Point CalculateMean(List<Point> Points)
+		Point CalculateMean(List<Point> ClusterPoints)
 		{
-			double X=0, Y=0;
-			if (Points.Count != 0)
+			double X, Y;
+			X = 0.0;
+			Y = 0.0;
+			if (ClusterPoints.Count != 0)
 			{
-				for (int i = 0; i < Points.Count(); i++)
+				for (int i = 0; i < ClusterPoints.Count(); i++)
 				{
-					X = X + Points[i].XCoordinate;
-					Y = Y + Points[i].YCoordinate;
+					X = X + ClusterPoints[i].XCoordinate;
+					Y = Y + ClusterPoints[i].YCoordinate;
 				}
-				X /= Points.Count();
-				Y /= Points.Count();
+				X /= ClusterPoints.Count();
+				Y /= ClusterPoints.Count();
 			}
 			return new Point(X, Y);
 		}
