@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Globalization;
 
@@ -23,14 +24,23 @@ namespace MyNotSoLittlePryczkoptron
             List<Point> TrainingPointsList = Parser.Parse();
             KohonenLearning NeuralNetworkKohonenStyle = new KohonenLearning(Neurons, TrainingPointsList, Configuration);
 			NeuralGas NeuralNetworkGasStyle = new NeuralGas(Neurons, TrainingPointsList, Configuration, NeuralGenerator);
+			VoronoiDiagramContext DiagramContext = new VoronoiDiagramContext
+			{
+				Width = 1366,
+				Height = 768,
+				MinX = TrainingPointsList.Min(point => point.XCoordinate) - 0.5,
+				MaxX = TrainingPointsList.Max(point => point.XCoordinate) + 0.5,
+				MinY = TrainingPointsList.Min(point => point.YCoordinate) - 0.5,
+				MaxY = TrainingPointsList.Max(point => point.YCoordinate) + 0.5,
+			};
 			if (KohonenSwitch)
 			{
 				for (int i = 0; i < 100; i++)
 				{
 					if (i % 10 == 0) { Console.WriteLine("Progress o 10 %"); }
 					NeuralNetworkKohonenStyle.Train(i);
-					IEnumerable<Point> points = NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints();
-					VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("Kohonen" + i.ToString("D3") + ".png");
+					IEnumerable<Point> Points = NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints();
+					VoronoiDiagram.CreateImage(DiagramContext, Points, TrainingPointsList).Save("Kohonen" + i.ToString("D3") + ".png");
 				}
 			}
 			else if(GasSwitch)
@@ -39,8 +49,8 @@ namespace MyNotSoLittlePryczkoptron
 				{
 					if (i % 50 == 0) { Console.WriteLine("Progress o 10 %"); }
 					NeuralNetworkGasStyle.Train(i);
-					IEnumerable<Point> points = NeuralNetworkGasStyle.ReturnNeuronsAsPoints();
-					VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("NeuralGas" + i.ToString("D3") + ".png");
+					IEnumerable<Point> Points = NeuralNetworkGasStyle.ReturnNeuronsAsPoints();
+					VoronoiDiagram.CreateImage(DiagramContext, Points, TrainingPointsList).Save("NeuralGas" + i.ToString("D3") + ".png");
 				}
 			}
 			else if (Kmeans)
