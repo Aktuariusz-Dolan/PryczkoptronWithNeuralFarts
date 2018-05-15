@@ -56,7 +56,7 @@ namespace MyNotSoLittlePryczkoptron
 			else if (Kmeans)
 			{
 				KSrednie KMeans = new KSrednie(10, 10, 10, TrainingPointsList, 150);
-				Parser.ParseOut(KMeans.Clusterize());
+				Parser.ParseOut(KMeans.Clusterize(DiagramContext));
 			}
 		}
     }

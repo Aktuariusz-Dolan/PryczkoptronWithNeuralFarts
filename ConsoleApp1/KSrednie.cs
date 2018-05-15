@@ -34,7 +34,7 @@ namespace MyNotSoLittlePryczkoptron
 			this.MaxIters = Maxiters;
 		}
 
-		public List<Point> Clusterize()
+		public List<Point> Clusterize(VoronoiDiagramContext Context)
 		{
 			Neurons = NeurGen.GetNeurons(ClusterCount, Xrange, Yrange);
 			foreach(Point Point in Points) {
@@ -90,7 +90,7 @@ namespace MyNotSoLittlePryczkoptron
 				{
 					Voro.Add(Neuron.GetAsPoint());
 				}
-				VoronoiDiagram.CreateImage(1366, 768, Voro , 0.9).Save("KMEANS" + Iteration.ToString()+"Means" + ClusterCount.ToString() + ".png");
+				VoronoiDiagram.CreateImage(Context, Voro).Save("KMEANS" + Iteration.ToString()+"Means" + ClusterCount.ToString() + ".png");
 			}
 			return Error;
 		}
