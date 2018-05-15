@@ -9,6 +9,8 @@ namespace MyNotSoLittlePryczkoptron
     {
         static void Main(string[] args)
         {
+			bool Kmeans = false;
+			bool GasSwitch = false;
 			bool KohonenSwitch = false;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             NeuronGenerator NeuralGenerator = new NeuronGenerator();
@@ -21,7 +23,7 @@ namespace MyNotSoLittlePryczkoptron
             List<Point> TrainingPointsList = Parser.Parse();
             KohonenLearning NeuralNetworkKohonenStyle = new KohonenLearning(Neurons, TrainingPointsList, Configuration);
 			NeuralGas NeuralNetworkGasStyle = new NeuralGas(Neurons, TrainingPointsList, Configuration, NeuralGenerator);
-			if (KohonenSwitch == true)
+			if (KohonenSwitch)
 			{
 				for (int i = 0; i < 1000; i++)
 				{
@@ -31,9 +33,9 @@ namespace MyNotSoLittlePryczkoptron
 				Parser.OutputFilePath = "G:\\Outcome.txt";
 				List<Point> points = NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints();
 				Parser.ParseOut(points);
-				VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("Voronoi.png");
+			//	VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("Voronoi.png");
 			}
-			else
+			else if(GasSwitch)
 			{
 				for (int i = 0; i < 500; i++)
 				{
@@ -42,6 +44,11 @@ namespace MyNotSoLittlePryczkoptron
 				}
 				Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
 				Console.ReadKey();
+			}
+			else if (Kmeans)
+			{
+				KSrednie KMeans = new KSrednie(40, 30, 30, TrainingPointsList, 150);
+				Parser.ParseOut(KMeans.Clusterize());
 			}
 		}
     }
