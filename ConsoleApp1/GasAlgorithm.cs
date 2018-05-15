@@ -138,7 +138,15 @@ public void DeleteWorstNeurons()
 	{
 		return Neurons;
 	}
-
+	
+	public List<Point> ReturnNeuronsAsPoints()
+	{
+		List<Point> ReturnPoints = new List<Point>();
+		foreach (Neuron Neuron in Neurons)
+			ReturnPoints.Add(Neuron.GetAsPoint());
+		return ReturnPoints;
+	}
+	
 	public void SetNeurons(List<Neuron> ImportedNeurons)
 	{
 		this.Neurons = ImportedNeurons;

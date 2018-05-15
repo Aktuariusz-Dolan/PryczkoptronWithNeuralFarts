@@ -29,8 +29,8 @@ namespace MyNotSoLittlePryczkoptron
 				{
 					if (i % 10 == 0) { Console.WriteLine("Progress o 10 %"); }
 					NeuralNetworkKohonenStyle.Train(i);
-					List<Point> points = NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints();
-					VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("Voronoi" + i.ToString("D3") + ".png");
+					IEnumerable<Point> points = NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints();
+					VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("Kohonen" + i.ToString("D3") + ".png");
 				}
 			}
 			else if(GasSwitch)
@@ -39,9 +39,9 @@ namespace MyNotSoLittlePryczkoptron
 				{
 					if (i % 50 == 0) { Console.WriteLine("Progress o 10 %"); }
 					NeuralNetworkGasStyle.Train(i);
+					IEnumerable<Point> points = NeuralNetworkGasStyle.ReturnNeuronsAsPoints();
+					VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("NeuralGas" + i.ToString("D3") + ".png");
 				}
-				Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
-				Console.ReadKey();
 			}
 			else if (Kmeans)
 			{
