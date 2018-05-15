@@ -25,9 +25,9 @@ namespace MyNotSoLittlePryczkoptron
 			NeuralGas NeuralNetworkGasStyle = new NeuralGas(Neurons, TrainingPointsList, Configuration, NeuralGenerator);
 			if (KohonenSwitch)
 			{
-				for (int i = 0; i < 1000; i++)
+				for (int i = 0; i < 100; i++)
 				{
-					if (i % 50 == 0) { Console.WriteLine("Progress o 10 %"); }
+					if (i % 10 == 0) { Console.WriteLine("Progress o 10 %"); }
 					NeuralNetworkKohonenStyle.Train(i);
 					List<Point> points = NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints();
 					VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("Voronoi" + i.ToString("D3") + ".png");
