@@ -27,11 +27,9 @@ namespace MyNotSoLittlePryczkoptron
 				{
 					if (i % 50 == 0) { Console.WriteLine("Progress o 10 %"); }
 					NeuralNetworkKohonenStyle.Train(i);
+					List<Point> points = NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints();
+					VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("Voronoi" + i.ToString("D3") + ".png");
 				}
-				Parser.OutputFilePath = "G:\\Outcome.txt";
-				List<Point> points = NeuralNetworkKohonenStyle.ReturnNeuronsAsPoints();
-				Parser.ParseOut(points);
-				VoronoiDiagram.CreateImage(1366, 768, points, 0.9).Save("Voronoi.png");
 			}
 			else
 			{
