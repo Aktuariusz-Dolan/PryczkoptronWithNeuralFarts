@@ -34,5 +34,12 @@ namespace MyNotSoLittlePryczkoptron
             else
             return 0.0;
         }
+
+		public double CalculateGasProximity(int z)
+		{
+			if (ProximityChoice == Proximity.Gauss) return Math.Exp((- z/ (2 * Math.Pow(LambdaCoefficient, 2))));
+			else
+				return 0.0;
+		}
     }
 }

@@ -6,6 +6,11 @@ namespace MyNotSoLittlePryczkoptron
 {
     public class NeuronGenerator
     {
+		public NeuronGenerator()
+		{
+
+		}
+
         public List<Neuron> GetNeurons(int NumberOfNeurons, double XRange, double YRange)
         {
             List<Neuron> Neurons = new List<Neuron>();

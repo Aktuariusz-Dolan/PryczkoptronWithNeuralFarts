@@ -25,7 +25,7 @@ namespace MyNotSoLittlePryczkoptron
 	private NeuronGenerator NeuronGen;
 	private int NumberOfEpochs;
 
-	public Func<Neuron, Neuron, double> ProximityFunctionType;
+	public Func<int, double> ProximityFunctionType;
 
 		public NeuralGas(List<Neuron> ListOfNeurons, List<Point> ListOfPoints, Configuration Configuration, NeuronGenerator Generator)
 		{
@@ -33,7 +33,8 @@ namespace MyNotSoLittlePryczkoptron
         this.Points = ListOfPoints;
         this.SetParams(Configuration);
         this.Errors = new List<Point>();
-		ProximityFunctionType = new ProximityFunction(Metric.Euclidean, Proximity.Rekt).CalculateProximity;
+		ProximityFunctionType = new ProximityFunction(Metric.Euclidean, Proximity.Gauss).CalculateGasProximity;
+		NeuronGen = new NeuronGenerator();
 		}
 
 	private void SetTargetPoint(Point Target)
@@ -59,12 +60,12 @@ namespace MyNotSoLittlePryczkoptron
 
 		private void UpdateWeights(int Iteration, Point TargetPoint)
 		{
-			foreach (Neuron Current in Neurons)
+			for (int i = 0; i<Neurons.Count(); i++)
 			{
-				double[] WeightsOfNeuronToChange = Current.GetWeightsArray();
+				double[] WeightsOfNeuronToChange = Neurons[i].GetWeightsArray();
 
-				WeightsOfNeuronToChange[0] = WeightsOfNeuronToChange[0] + SpeedFactor(Iteration) * ProximityFunctionType(Winner, Current) * (TargetPoint.XCoordinate - WeightsOfNeuronToChange[0]);
-				WeightsOfNeuronToChange[1] = WeightsOfNeuronToChange[1] + SpeedFactor(Iteration) * ProximityFunctionType(Winner, Current) * (TargetPoint.YCoordinate - WeightsOfNeuronToChange[1]);
+				WeightsOfNeuronToChange[0] = WeightsOfNeuronToChange[0] + SpeedFactor(Iteration) * ProximityFunctionType(i) * (TargetPoint.XCoordinate - WeightsOfNeuronToChange[0]);
+				WeightsOfNeuronToChange[1] = WeightsOfNeuronToChange[1] + SpeedFactor(Iteration) * ProximityFunctionType(i) * (TargetPoint.YCoordinate - WeightsOfNeuronToChange[1]);
 			}
 		}
 

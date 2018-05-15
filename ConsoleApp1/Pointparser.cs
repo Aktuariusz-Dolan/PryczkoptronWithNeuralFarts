@@ -21,11 +21,13 @@ namespace MyNotSoLittlePryczkoptron
                     double X, Y;
 	                while ((InputLine = StreamReader.ReadLine() ) != null)
                     {
-                       
-                        FormatInput = InputLine.Split(',');
-                        Double.TryParse(FormatInput[0],out X);
-                        Double.TryParse(FormatInput[1], out Y);
-                        Outcome.Add(new Point(X, Y));
+						FormatInput = InputLine.Split(',');
+						if (FormatInput.Length == 2)
+						{
+							Double.TryParse(FormatInput[0], out X);
+							Double.TryParse(FormatInput[1], out Y);
+							Outcome.Add(new Point(X, Y));
+						}
 					}
 				}
 				return Outcome;
