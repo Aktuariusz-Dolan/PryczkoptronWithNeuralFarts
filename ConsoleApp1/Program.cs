@@ -9,7 +9,7 @@ namespace MyNotSoLittlePryczkoptron
     {
         static void Main(string[] args)
         {
-			bool Kmeans = false;
+			bool Kmeans = true;
 			bool GasSwitch = false;
 			bool KohonenSwitch = false;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
@@ -45,7 +45,7 @@ namespace MyNotSoLittlePryczkoptron
 			}
 			else if (Kmeans)
 			{
-				KSrednie KMeans = new KSrednie(40, 30, 30, TrainingPointsList, 150);
+				KSrednie KMeans = new KSrednie(10, 10, 10, TrainingPointsList, 150);
 				Parser.ParseOut(KMeans.Clusterize());
 			}
 		}

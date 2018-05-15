@@ -42,6 +42,7 @@ namespace MyNotSoLittlePryczkoptron
 
         public void ParseOut(List<Point> Arg)
         {
+			OutputFilePath = "G:\\Neurons.txt";
             try
             {
                 using (StreamWriter StreamWriter = new StreamWriter(OutputFilePath))

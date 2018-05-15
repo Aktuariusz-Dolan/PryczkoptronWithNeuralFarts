@@ -15,7 +15,7 @@ namespace MyNotSoLittlePryczkoptron
 		private NeuronGenerator NeurGen;
 		private double Xrange;
 		private double Yrange;
-		public List<double> Error;
+		public List<Point> Error;
 		private int MaxIters;
 
 		public KSrednie(int ClusterCount , double Xrange, double Yrange, List<Point> Points, int Maxiters)
@@ -30,7 +30,7 @@ namespace MyNotSoLittlePryczkoptron
 			{
 				Clusters.Add(i, new List<Point>());
 			}
-			this.Error = new List<Double>();
+			this.Error = new List<Point>();
 			this.MaxIters = Maxiters;
 		}
 
@@ -42,24 +42,28 @@ namespace MyNotSoLittlePryczkoptron
 				int BestSoFar = -1;
 				for (int i = 0; i < ClusterCount; i++)
 				{
-					if(Neurons[i].CalculateDistanceFrom(Point) < ClosestDistance)
+					if (Neurons[i].CalculateDistanceFrom(Point) < ClosestDistance)
 					{
+				//		Console.WriteLine("Distance from Neuron" + i.ToString() + Neurons[i].CalculateDistanceFrom(Point) );
 						BestSoFar = i;
+						ClosestDistance = Neurons[i].CalculateDistanceFrom(Point);
 					}
 				}
 				Clusters[BestSoFar].Add(Point);
+				//Console.WriteLine("Assigned to: " + BestSoFar.ToString());
 			};
-			Error.Add(0.0);
 			for (int Iteration = 0; Iteration < MaxIters; Iteration++) {
-				Error.Add(0.0);
-
+				Point Err = new Point(Iteration, 0.0);
 				for(int i=0; i < ClusterCount; i++){ {
 					Double ErrorComponent = 0.0;
 					Point Mean = CalculateMean(Clusters[i]);
 					ErrorComponent = Neurons[i].CalculateDistanceFrom(Mean);
-					Error[Iteration] += ErrorComponent;
-					Neurons[i].UpdatePositions(Mean.XCoordinate, Mean.YCoordinate);
+					Err.YCoordinate += ErrorComponent;
+//if(Iteration == 0 || Iteration == 1)		Console.WriteLine(i.ToString() + Neurons[i].GetAsPoint().XCoordinate + " " + Neurons[i].GetAsPoint().YCoordinate + " MEAN " + Mean.XCoordinate + " " + Mean.YCoordinate);
+					Neurons[i].UpdateWeight(Mean.XCoordinate, Mean.YCoordinate);
+					
 					}
+					Error.Add(Err);
 				};
 
 				//reassign clusters;
@@ -73,21 +77,22 @@ namespace MyNotSoLittlePryczkoptron
 					int BestSoFar = -1;
 					for (int i = 0; i < ClusterCount; i++)
 					{
-
 						if (Neurons[i].CalculateDistanceFrom(Point) < ClosestDistance)
 						{
 							BestSoFar = i;
+							ClosestDistance = Neurons[i].CalculateDistanceFrom(Point);
 						}
 					}
 					Clusters[BestSoFar].Add(Point);
 				};
+				List<Point> Voro = new List<Point>(); 
+				foreach (Neuron Neuron in Neurons)
+				{
+					Voro.Add(Neuron.GetAsPoint());
+				}
+				VoronoiDiagram.CreateImage(1366, 768, Voro , 0.9).Save("KMEANS" + Iteration.ToString()+"Means" + ClusterCount.ToString() + ".png");
 			}
-			List<Point> Centroids = new List<Point>();
-			foreach(Neuron Neuron in Neurons)
-			{
-				Centroids.Add(Neuron.GetAsPoint());
-			}
-			return Centroids;
+			return Error;
 		}
 
 		Point CalculateMean(List<Point> ClusterPoints)

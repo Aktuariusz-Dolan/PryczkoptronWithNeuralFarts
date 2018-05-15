@@ -15,11 +15,18 @@ namespace MyNotSoLittlePryczkoptron
 
         public Neuron(double[] weights)
         {
-
             this.Weights = weights;
             AreaOfInfluence = new List<Point>();
             Positions = new List<Point>();
-        }
+		}
+
+		public void UpdateWeight(double X, double Y)
+		{
+			Weights[0] = X;
+			Weights[1] = Y;
+		}
+
+
         public void UpdatePositions(double x, double y)
         {
             Positions.Add(new Point( x, y));
