@@ -61,6 +61,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="GasAlgorithm.cs" />
     <Compile Include="KohonenLearning.cs" />
+    <Compile Include="KSrednie.cs" />
     <Compile Include="Learn.cs" />
     <Compile Include="ListShuffler.cs" />
     <Compile Include="NeuronGenerator.cs" />
