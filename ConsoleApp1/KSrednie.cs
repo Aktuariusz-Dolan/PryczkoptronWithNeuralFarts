@@ -10,7 +10,6 @@ namespace MyNotSoLittlePryczkoptron
 	{
 		private	int ClusterCount;
 		private Dictionary<int, List<Point>> Clusters;
-		private Dictionary<int, List<Point>> PreviousClusters;
 		private List<Point> Points;
 		private List<Neuron> Neurons; // aka centroidy
 		private NeuronGenerator NeurGen;
@@ -26,6 +25,7 @@ namespace MyNotSoLittlePryczkoptron
 			this.Xrange = Xrange;
 			this.Yrange = Yrange;
 			this.Points = Points;
+			this.Clusters = new Dictionary<int, List<Point>>();
 			for (int i =0; i < ClusterCount; i++)
 			{
 				Clusters.Add(i, new List<Point>());
@@ -50,16 +50,18 @@ namespace MyNotSoLittlePryczkoptron
 				}
 				Clusters[BestSoFar].Add(Point);
 			});
-
+			Error.Add(0.0);
 			for (int Iteration = 0; Iteration < MaxIters; Iteration++) {
 				Error.Add(0.0);
-				Parallel.ForEach(Clusters.Keys, i => {
+
+				for(int i=0; i < ClusterCount; i++){ {
 					Double ErrorComponent = 0.0;
 					Point Mean = CalculateMean(Clusters[i]);
 					ErrorComponent = Neurons[i].CalculateDistanceFrom(Mean);
 					Error[Iteration] += ErrorComponent;
 					Neurons[i].UpdatePositions(Mean.XCoordinate, Mean.YCoordinate);
-				});
+					}
+				};
 
 				//reassign clusters;
 				foreach(int i in Clusters.Keys)
@@ -79,6 +81,7 @@ namespace MyNotSoLittlePryczkoptron
 						}
 					}
 					Clusters[BestSoFar].Add(Point);
+					Console.WriteLine("DUPA W KLASTER");
 				});
 			}
 			List<Point> Centroids = new List<Point>();
@@ -92,13 +95,16 @@ namespace MyNotSoLittlePryczkoptron
 		Point CalculateMean(List<Point> Points)
 		{
 			double X=0, Y=0;
-			foreach(Point Point in Points)
+			if (Points.Count != 0)
 			{
-				X = X + Point.XCoordinate;
-				Y = Y + Point.YCoordinate;
+				for (int i = 0; i < Points.Count(); i++)
+				{
+					X = X + Points[i].XCoordinate;
+					Y = Y + Points[i].YCoordinate;
+				}
+				X /= Points.Count();
+				Y /= Points.Count();
 			}
-			X /= Points.Count();
-			Y /= Points.Count();
 			return new Point(X, Y);
 		}
 	}
