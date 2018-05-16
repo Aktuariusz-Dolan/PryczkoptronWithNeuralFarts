@@ -51,7 +51,6 @@ namespace MyNotSoLittlePryczkoptron
 				radius * 2f
 			);
 
-            VoronoiGraph graph = Fortune.ComputeVoronoiGraph(dataPoints.First().Distinct());
             var image = new Bitmap(context.Width, context.Height);
             var linePen = new Pen(context.LineColor);
 			var dataPointBrushes = context.DataPointsColors.Select(color => new SolidBrush(color));
@@ -59,32 +58,37 @@ namespace MyNotSoLittlePryczkoptron
             surface.Clear(context.BackgroundColor);
             surface.SmoothingMode = SmoothingMode.HighQuality;
 
-			double infiniteLength = context.Width + context.Height;
-			foreach (var edge in graph.Edges)
-            {
-                Vector left = edge.VVertexA;
-                Vector right = edge.VVertexB;
-                if (edge.IsPartlyInfinite)
-                {
-                    Vector extension = edge.DirectionVector * infiniteLength;
-                    if (left == Fortune.VVInfinite)
-                    {
-                        left = edge.FixedPoint - extension;
-                    }
-                    if (right == Fortune.VVInfinite)
-                    {
-                        right = edge.FixedPoint + extension;
-                    }
-                }
-                surface.DrawLine(linePen, toPoint(left), toPoint(right));
-            }
+			try
+			{
+				VoronoiGraph graph = Fortune.ComputeVoronoiGraph(dataPoints.First().Distinct());
+				double infiniteLength = context.Width + context.Height;
+				foreach (var edge in graph.Edges)
+				{
+					Vector left = edge.VVertexA;
+					Vector right = edge.VVertexB;
+					if (edge.IsPartlyInfinite)
+					{
+						Vector extension = edge.DirectionVector * infiniteLength;
+						if (left == Fortune.VVInfinite)
+						{
+							left = edge.FixedPoint - extension;
+						}
+						if (right == Fortune.VVInfinite)
+						{
+							right = edge.FixedPoint + extension;
+						}
+					}
+					surface.DrawLine(linePen, toPoint(left), toPoint(right));
+				}
+			}
+			catch (Exception) {}
 			
 			var target = dataPoints.Zip(
 				dataPointBrushes.Zip(
 					context.DataPointsRadii,
 					(brush, radius) => new { brush, radius }),
 				(points, style) => new { points, style }
-			);
+			).Reverse();
 			foreach (var data in target)
 			{
 				foreach (var point in data.points)
